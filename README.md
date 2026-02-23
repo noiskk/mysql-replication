@@ -1,10 +1,11 @@
 # mysql-replication
 
-목차
-### 1. GTID란?
-### 2. GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
+## 목차
+### [1](#1-gtid란). GTID란?
+### [2](#2-gtid를-활용한-replica-승격-시나리오-수동-failover). Replica 승격 시나리오
 
----
+
+<br>
 
 # 1. GTID (Global Transaction Identifier)
 
@@ -18,6 +19,8 @@ GTID는 각 트랜잭션에 전역적으로 유일한 ID를 부여하는 복제 
 즉, GTID는 "로그 위치"가 아니라 "트랜잭션 단위"로 복제를 관리한다.
 
 ---
+
+<br>
 
 ## 2. File/Position 방식과의 차이
 
@@ -35,8 +38,6 @@ mysql-bin.000003, position 154
 * 중간에 로그가 삭제되면 복구가 어려움
 * Primary 승격 시 수동 조정 필요
 * Replica가 여러 개인 경우 관리 복잡
-
----
 
 ### 2.2 GTID 방식
 
@@ -60,6 +61,8 @@ Replica는 Source 서버에 이렇게 요청한다.
 
 ---
 
+<br>
+
 ## 3. Failover 상황에서의 차이
 
 예시 상황:
@@ -80,6 +83,8 @@ Replica는 Source 서버에 이렇게 요청한다.
 
 ---
 
+<br>
+
 ## 4. GTID 핵심 개념
 
 ### 4.1 gtid_executed
@@ -97,6 +102,9 @@ Replica는 Source 서버에 이렇게 요청한다.
 File/Position 기반이 아닌
 GTID 기반 복제를 사용하도록 설정하는 옵션
 
+---
+
+<br>
 
 ## 5. GTID 구조
 
@@ -115,13 +123,17 @@ server_uuid:transaction_id
 * 어떤 서버에서 발생한 트랜잭션인지 식별 가능
 * 해당 서버에서 몇 번째 트랜잭션인지 식별 가능
 
+---
+
+<br>
+
 ## 6. GTID 설정 방법
 
 * Primary / Replica 서버 모두 설정 필요
 * 각 서버는 고유한 server-id 사용
 * Binary Log 활성화 필수
 
-my.cnf 설정
+### my.cnf 설정
 
 Primary / Replica 공통 설정:
 
@@ -142,7 +154,7 @@ log_slave_updates = ON       # Replica에서 반드시 필요
 sudo systemctl restart mysql
 ```
 
-
+<br>
 
 # 2. GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
 
@@ -151,18 +163,19 @@ Primary 서버 장애 발생
 여러 Replica 중 하나를 새 Primary로 승격해야 함 - 판단 기준은?
 
 ### Failover 전체 흐름
-Source 장애 발생
+1. Source 장애 발생
 
-각 Replica의 GTID 비교
+2. 각 Replica의 GTID 비교
 
-최신 Replica 선정
+3. 최신 Replica 선정
 
-해당 Replica에서 STOP REPLICA + RESET
+4. 해당 Replica에서 STOP REPLICA + RESET
 
-read_only 해제 → Source(Primary) 승격
+5. read_only 해제 → Source(Primary) 승격
 
-나머지 Replica를 새 Primary에 재연결
+6. 나머지 Replica를 새 Primary에 재연결
 
+<br>
 
 ### Step 1: 복제 구성 (Source 1개 + Replica 2개)
 
@@ -202,9 +215,8 @@ SHOW GLOBAL VARIABLES LIKE 'gtid_executed';
 <img width="1478" height="1740" alt="image" src="https://github.com/user-attachments/assets/0b729354-e648-4bb5-acee-2b282ff46324" />
 
 판단 기준
-
-가장 많은 GTID를 가진 Replica가 최신
-GTID 집합 비교 후 최신 서버 선정
+- 가장 많은 GTID를 가진 Replica가 최신
+- GTID 집합 비교 후 최신 서버 선정
 
 ### Step 6: 복제 중지
 
