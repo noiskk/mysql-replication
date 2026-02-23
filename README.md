@@ -116,11 +116,9 @@ server_uuid:transaction_id
 
 ## 6. GTID 설정 방법
 
-Primary / Replica 서버 모두 설정 필요
-
-각 서버는 고유한 server-id 사용
-
-Binary Log 활성화 필수
+* Primary / Replica 서버 모두 설정 필요
+* 각 서버는 고유한 server-id 사용
+* Binary Log 활성화 필수
 
 2. my.cnf 설정
 
