@@ -1,7 +1,8 @@
 # mysql-replication
 
-## 1. GTID란?
-## 2. GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
+차례
+### 1. GTID란?
+### 2. GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
 
 
 
