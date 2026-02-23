@@ -140,3 +140,88 @@ log_slave_updates = ON       # Replica에서 반드시 필요
 ```
 sudo systemctl restart mysql
 ```
+
+# 수동 Failover (Replica 승격 시나리오)
+
+상황:
+Primary 서버 장애 발생
+여러 Replica 중 하나를 새 Primary로 승격해야 함 - 판단 기준은?
+
+### Failover 전체 흐름
+Source 장애 발생
+
+각 Replica의 GTID 비교
+
+최신 Replica 선정
+
+해당 Replica에서 STOP REPLICA + RESET
+
+read_only 해제 → Source(Primary) 승격
+
+나머지 Replica를 새 Primary에 재연결
+
+
+### Step 1: 복제 구성 (Source 1개 + Replica 2개)
+
+GTID 켜고 구성
+
+### Step 2: 한 Replica만 일시 정지시키기
+
+Replica B 복제 중지
+```
+STOP Replica;
+```
+* 이 상태에서는 Source에서 발생하는 새로운 트랜잭션을 받지 못한다.
+
+### Step 3: Source에서 트랜잭션 여러 개 실행
+```
+INSERT INTO products VALUES (1);
+INSERT INTO products VALUES (2);
+INSERT INTO products VALUES (3);
+```
+### Step 4: Source 강제 종료
+```
+docker kill mysql-primary
+```
+
+### Step 5: 승격시킬 최신 Replica 선정
+
+각 Replica에서 실행:
+```
+SHOW MASTER STATUS;
+SHOW GLOBAL VARIABLES LIKE 'gtid_executed';
+```
+
+판단 기준
+
+가장 많은 GTID를 가진 Replica가 최신
+GTID 집합 비교 후 최신 서버 선정
+
+### Step 6: 복제 중지
+
+선정된 Replica에서:
+```
+STOP REPLICA;
+RESET REPLICA ALL;
+
+SET GLOBAL read_only = OFF;
+```
+
+→ 기존 Primary와의 복제 연결 제거
+이제 이 서버가 새로운 Source 역할 수행
+
+### Step 7: 다른 Replica들을 새 Primary에 연결
+
+기존 다른 Replica들에서
+```
+STOP REPLICA;
+
+CHANGE REPLICATION SOURCE TO
+  SOURCE_HOST='new_primary_ip',
+  SOURCE_USER='replica_user',
+  SOURCE_PASSWORD='password',
+  SOURCE_AUTO_POSITION=1;
+
+START REPLICA;
+```
+
