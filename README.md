@@ -82,20 +82,17 @@ Replica는 Source 서버에 이렇게 요청한다.
 
 해당 서버가 실행 완료한 트랜잭션 집합
 
----
 
 ### 4.2 gtid_purged
 
 삭제된 Binary Log에 포함된 GTID 집합
 
----
 
 ### 4.3 auto_position = 1
 
 File/Position 기반이 아닌
 GTID 기반 복제를 사용하도록 설정하는 옵션
 
----
 
 ## 5. GTID 구조
 
@@ -183,7 +180,7 @@ INSERT INTO products VALUES (3);
 
 <img width="1480" height="1738" alt="image" src="https://github.com/user-attachments/assets/2a3930ff-6499-48d9-aeb6-8bd2ce3a1b06" />
 
-### Step 4: Source 강제 종료
+### Step 4: Source 강제 종료 (Source 서버 장애 발생)
 ```
 docker kill mysql-primary
 ```
