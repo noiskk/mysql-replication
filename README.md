@@ -1,8 +1,6 @@
 # mysql-replication
 
-아래처럼 정리해서 README에 넣으면 깔끔해.
 
----
 
 # GTID (Global Transaction Identifier)
 
@@ -117,3 +115,30 @@ server_uuid:transaction_id
 * 해당 서버에서 몇 번째 트랜잭션인지 식별 가능
 
 ## 6. GTID 설정 방법
+
+Primary / Replica 서버 모두 설정 필요
+
+각 서버는 고유한 server-id 사용
+
+Binary Log 활성화 필수
+
+2. my.cnf 설정
+
+Primary / Replica 공통 설정:
+
+```
+[mysqld]
+server-id = 1                # Replica는 2, 3 등 고유값
+log-bin = mysql-bin
+binlog_format = ROW
+
+gtid_mode = ON
+enforce_gtid_consistency = ON
+
+log_slave_updates = ON       # Replica에서 반드시 필요
+```
+
+설정 후 MySQL 재시작
+```
+sudo systemctl restart mysql
+```
