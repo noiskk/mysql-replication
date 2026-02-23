@@ -1,8 +1,12 @@
 # mysql-replication
 
+# 1. GTID란?
+
+# 2. GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
 
 
-# GTID (Global Transaction Identifier)
+
+# 1. GTID (Global Transaction Identifier)
 
 ## 1. GTID란?
 
@@ -138,7 +142,9 @@ log_slave_updates = ON       # Replica에서 반드시 필요
 sudo systemctl restart mysql
 ```
 
-# GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
+
+
+# 2. GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
 
 상황:
 Primary 서버 장애 발생
