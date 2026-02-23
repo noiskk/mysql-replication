@@ -117,7 +117,7 @@ server_uuid:transaction_id
 * 각 서버는 고유한 server-id 사용
 * Binary Log 활성화 필수
 
-2. my.cnf 설정
+my.cnf 설정
 
 Primary / Replica 공통 설정:
 
@@ -215,9 +215,9 @@ SET GLOBAL read_only = OFF;
 → 기존 Primary와의 복제 연결 제거
 이제 이 서버가 새로운 Source 역할 수행
 
-### Step 7: 다른 Replica들을 새 Primary에 연결
+### Step 7: 다른 Replica를 새 Primary에 연결
 
-기존 다른 Replica들에서
+기존 다른 Replica에서
 ```
 STOP REPLICA;
 
@@ -228,5 +228,15 @@ CHANGE REPLICATION SOURCE TO
   SOURCE_AUTO_POSITION=1;
 
 START REPLICA;
+
 ```
 
+💥 에러 발생
+```
+Got fatal error 1236:
+Cannot replicate because the source purged required binary logs.
+```
+
+마스터가 필요한 binlog를 이미 삭제해버렸다는 뜻
+
+> Source를 다시 살리고 다른 Replica를 연결 ..?
