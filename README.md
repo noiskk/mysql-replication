@@ -141,7 +141,7 @@ log_slave_updates = ON       # Replica에서 반드시 필요
 sudo systemctl restart mysql
 ```
 
-# 수동 Failover (Replica 승격 시나리오)
+# GTID를 활용한 Replica 승격 시나리오 (수동 Failover)
 
 상황:
 Primary 서버 장애 발생
