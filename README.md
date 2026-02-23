@@ -164,6 +164,7 @@ read_only 해제 → Source(Primary) 승격
 ### Step 1: 복제 구성 (Source 1개 + Replica 2개)
 
 GTID 켜고 구성
+<img width="1474" height="1740" alt="image" src="https://github.com/user-attachments/assets/d1770f9f-6501-4d4a-b770-b1e0aae827ca" />
 
 ### Step 2: 한 Replica만 일시 정지시키기
 
@@ -179,6 +180,9 @@ INSERT INTO products VALUES (1);
 INSERT INTO products VALUES (2);
 INSERT INTO products VALUES (3);
 ```
+
+<img width="1480" height="1738" alt="image" src="https://github.com/user-attachments/assets/2a3930ff-6499-48d9-aeb6-8bd2ce3a1b06" />
+
 ### Step 4: Source 강제 종료
 ```
 docker kill mysql-primary
@@ -191,6 +195,8 @@ docker kill mysql-primary
 SHOW MASTER STATUS;
 SHOW GLOBAL VARIABLES LIKE 'gtid_executed';
 ```
+
+<img width="1478" height="1740" alt="image" src="https://github.com/user-attachments/assets/0b729354-e648-4bb5-acee-2b282ff46324" />
 
 판단 기준
 
@@ -206,6 +212,8 @@ RESET REPLICA ALL;
 
 SET GLOBAL read_only = OFF;
 ```
+<img width="1478" height="574" alt="image" src="https://github.com/user-attachments/assets/b7e9e6a4-bdf0-483e-ac9d-a91622d566a8" />
+
 
 → 기존 Primary와의 복제 연결 제거
 이제 이 서버가 새로운 Source 역할 수행
