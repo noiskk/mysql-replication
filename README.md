@@ -245,4 +245,4 @@ Cannot replicate because the source purged required binary logs.
 
 마스터가 필요한 binlog를 이미 삭제해버렸다는 뜻
 
-> Source를 다시 살리고 다른 Replica를 연결 ..?
+> Source를 다시 살리고 다른 Replica를 연결 ..? 하니 되긴하지만 정확한 원인은 모르겠음
